@@ -1,5 +1,5 @@
 using Core.Interfaces;
-using Infrastructure.Data;
+using Infra.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
