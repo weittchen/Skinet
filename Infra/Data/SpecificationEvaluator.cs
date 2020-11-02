@@ -9,14 +9,24 @@ namespace Infra.Data
     {
         public static IQueryable<TEntity> GetQuery(
             IQueryable<TEntity> query,
-            ISpecification<TEntity> spectication)
+            ISpecification<TEntity> specification)
         {
-            if (spectication.Criteria != null)
+            if (specification.Criteria != null)
             {
-                query = query.Where(spectication.Criteria);
+                query = query.Where(specification.Criteria);
             }
 
-            return spectication.Includes
+            if (specification.OrderBy != null)
+            {
+                query = query.OrderBy(specification.OrderBy);
+            }
+
+            if (specification.OrderByDescending != null)
+            {
+                query = query.OrderByDescending(specification.OrderByDescending);
+            }
+
+            return specification.Includes
                 .Aggregate(query, (current, include) => current.Include(include));
         }
     }

@@ -31,11 +31,11 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> GetProducts()
+        public async Task<ActionResult<List<Product>>> GetProducts(string sort)
         {
             return Ok(_mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(
                 await _productRepo.ListWithSpecAsync(
-                    new ProductsWithTypesAndBrandsSpecification())));
+                    new ProductsWithTypesAndBrandsSpecification(sort))));
         }
 
         [HttpGet("{id}")]
