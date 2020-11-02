@@ -4,6 +4,7 @@ using API.Dtos;
 using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
+using Core.Specifications;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -33,13 +34,16 @@ namespace API.Controllers
         public async Task<ActionResult<List<Product>>> GetProducts()
         {
             return Ok(_mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(
-                await _productRepo.ListAllAsync()));
+                await _productRepo.ListWithSpecAsync(
+                    new ProductsWithTypesAndBrandsSpecification())));
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            return Ok(await _productRepo.GetByIdAsync(id));
+            return Ok(_mapper.Map<Product, ProductToReturnDto>(
+                await _productRepo.GetEntityWithSpec(
+                    new ProductsWithTypesAndBrandsSpecification())));
         }
 
         [HttpGet("brands")]
