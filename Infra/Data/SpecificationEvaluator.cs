@@ -26,6 +26,12 @@ namespace Infra.Data
                 query = query.OrderByDescending(specification.OrderByDescending);
             }
 
+            if (specification.IsPagingEnabled)
+            {
+                query = query.Skip(specification.Skip)
+                    .Take(specification.Take);
+            }
+
             return specification.Includes
                 .Aggregate(query, (current, include) => current.Include(include));
         }
