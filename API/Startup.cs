@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 
 namespace API
 {
@@ -46,6 +47,15 @@ namespace API
                 };
             });
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Skinet API",
+                    Version = "v1"
+                });
+            });
+
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddDbContext<StoreContext>(x =>
                  x.UseSqlite(_configuration.GetConnectionString("DefaultConnection")));
@@ -65,6 +75,12 @@ namespace API
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Skinet API v1");
+            });
 
             app.UseEndpoints(endpoints =>
             {
