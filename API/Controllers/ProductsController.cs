@@ -32,7 +32,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> GetProducts(
+        public async Task<ActionResult<List<ProductToReturnDto>>> GetProducts(
             [FromQuery] ProductSpecParams productSpecParams)
         {
             var totalItems = await _productRepo.CountAsync(
@@ -49,11 +49,17 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
         {
-            return Ok(_mapper.Map<Product, ProductToReturnDto>(
-                await _productRepo.GetEntityWithSpec(
-                    new ProductsWithTypesAndBrandsSpecification())));
+            var product = await _productRepo.GetEntityWithSpec(
+                new ProductsWithTypesAndBrandsSpecification(id));
+
+            if (product is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(_mapper.Map<Product, ProductToReturnDto>(product));
         }
 
         [HttpGet("brands")]
